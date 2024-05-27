@@ -1,4 +1,4 @@
-// Endpoint = /api/contacts
+// Endpoint = /api/contacts/
 const asyncHandler = require("express-async-handler");
 const Contact = require("../models/contactModel");
 
@@ -12,11 +12,12 @@ const getContact = asyncHandler(async (req, res) => {
 
 // GET All
 const getAllContacts = asyncHandler(async (req, res) => {
-  const contacts = await Contact.find();
+  const contacts = await Contact.find({user_id : req.user.id});
   res.status(200).json(contacts);
 });
 
 // POST
+// Endpoint = /api/contacts/
 const createContact = asyncHandler(async (req, res) => {
   const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
@@ -24,7 +25,7 @@ const createContact = asyncHandler(async (req, res) => {
     throw new Error("All fields are mandotory");
   }
 
-  const contact = await Contact.create({ name, email, phone });
+  const contact = await Contact.create({ name, email, phone , user_id : req.user.id});
 
   res.status(201).json(contact);
 });
